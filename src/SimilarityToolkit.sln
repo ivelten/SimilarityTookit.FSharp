@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{F51560CC-667C-4229-82AA-3D0E22540CD0}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+	EndProjectSection
+EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SimilarityToolkit", "SimilarityToolkit.Core\SimilarityToolkit.fsproj", "{F4321A78-179D-48C1-B827-492F9102652D}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SimilarityToolkit.Tests", "SimilarityToolkit.Tests\SimilarityToolkit.Tests.fsproj", "{6B8A21C1-F5EF-4100-9E26-A8AEE3B4F638}"
