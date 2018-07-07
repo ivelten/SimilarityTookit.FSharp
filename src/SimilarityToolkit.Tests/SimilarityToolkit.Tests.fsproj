@@ -18,7 +18,7 @@
     <PackageReference Include="FsCheck.Xunit" Version="2.11.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimilarityToolkit.Core\SimilarityToolkit.fsproj" />
+    <ProjectReference Include="..\SimilarityToolkit\SimilarityToolkit.fsproj" />
   </ItemGroup>
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
