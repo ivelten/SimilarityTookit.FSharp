@@ -13,7 +13,17 @@ type SByteSimilarityEvaluator() =
     override __.EvaluateDistance(x : sbyte, y : sbyte) =
         Convert.ToDecimal(x) - Convert.ToDecimal(y) |> Math.Abs
 
+type DateTimeSimilarityEvaluator() =
+    inherit SimilarityEvaluatorBase<DateTime>()
+    override __.EvaluateDistance(x : DateTime, y : DateTime) =
+        if x.Date = x && y.Date = y
+        then (x - y).TotalDays |> Convert.ToDecimal
+        else (x - y).TotalSeconds |> Convert.ToDecimal
+
 type DecimalSimilarityEvaluator() =
     inherit SimilarityEvaluatorBase<decimal>()
     override __.EvaluateDistance(x : decimal, y : decimal) =
-        x - y |> Math.Abs
+        try
+            x - y |> Math.Abs
+        with
+        | :? OverflowException -> Decimal.MaxValue
