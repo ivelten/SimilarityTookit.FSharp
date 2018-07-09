@@ -73,3 +73,26 @@ type DecimalSimilarityEvaluator() =
             x - y |> Math.Abs
         with
         | :? OverflowException -> Decimal.MaxValue
+
+type StringSimilarityEvaluator() =
+    inherit SimilarityEvaluatorBase<string>()
+        override __.EvaluateDistance(x : string, y : string) =
+            let length (x : string) =
+                match x with
+                | null -> 0
+                | s -> s.Length
+            if String.IsNullOrEmpty(x) && String.IsNullOrEmpty(y)
+            then 0M
+            else
+                let len1 = length x
+                let len2 = length y
+                let distances = Array2D.zeroCreate<int> (len1 + 1) (len2 + 1)
+                for i = 0 to len1 do distances.[i, 0] <- i
+                for j = 0 to len2 do distances.[0, j] <- j
+                for i = 1 to len1 do
+                    for j = 1 to len2 do
+                        let cost =  if y.[j - 1] = x.[i - 1] then 0 else 1
+                        let a = Math.Min(distances.[i - 1, j] + 1, distances.[i, j - 1] + 1)
+                        let b = distances.[i - 1, j - 1] + cost
+                        distances.[i, j] <- Math.Min(a, b)
+                distances.[len1, len2] |> Convert.ToDecimal

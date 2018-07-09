@@ -5,6 +5,8 @@ open FsCheck.Xunit
 open SimilarityToolkit.Evaluators
 open Assertions
 open Xunit
+open System.Collections
+open System.Collections.Generic
 
 [<Property>]
 let ``ByteSimilarityEvaluator: distance equals absolute value of the difference`` (x : byte) (y : byte) =
@@ -104,3 +106,26 @@ let ``DateTimeSimilarityEvaluator: if one of dates have a time, return distance 
     let x = DateTime(2000, 2, 10, 13, 20, 10)
     let y = DateTime(2000, 2, 10)
     DateTimeSimilarityEvaluator().EvaluateDistance(x, y) |> equals 48010M
+
+type StringSimilarityEvaluatorTestData() =
+    let items : IEnumerable<obj []> = seq {
+            yield [| "abc"; "abc"; 0M |]
+            yield [| "abc"; "abC"; 1M |]
+            yield [| "abc"; "abC "; 2M |]
+            yield [| ""; ""; 0M |]
+            yield [| ""; null; 0M |]
+            yield [| null; ""; 0M |]
+            yield [| null; null; 0M |]
+            yield [| "abc"; null; 3M |]
+            yield [| null; "abc"; 3M |]
+            yield [| ""; "abc"; 3M |]
+            yield [| "abc"; ""; 3M |]
+        }
+    interface IEnumerable<obj []> with
+        member __.GetEnumerator() : IEnumerator<obj []> = items.GetEnumerator()
+        member __.GetEnumerator() : IEnumerator = upcast items.GetEnumerator()
+
+[<Theory>]
+[<ClassData(typeof<StringSimilarityEvaluatorTestData>)>]
+let ``StringSimilarityEvaluator: should match distance based on different characters`` (x : string) (y : string) (expected : decimal) =
+    StringSimilarityEvaluator().EvaluateDistance(x, y) |> equals expected
