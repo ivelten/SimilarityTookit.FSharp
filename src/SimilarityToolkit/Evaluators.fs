@@ -15,7 +15,7 @@ type SimilarityEvaluatorCollection private (list) =
             upcast x, upcast NullableSimilarityEvaluator<'T>(x)
         let listvn x =
             x |> List.fold (fun acc (x, y) -> x :: y :: acc) []
-        let primitives =
+        SimilarityEvaluatorCollection.From(
             [ buildvn <| ByteSimilarityEvaluator()
               buildvn <| SByteSimilarityEvaluator()
               buildvn <| Int16SimilarityEvaluator()
@@ -29,8 +29,7 @@ type SimilarityEvaluatorCollection private (list) =
               buildvn <| DateTimeSimilarityEvaluator()
               buildvn <| DecimalSimilarityEvaluator() ]
             |> listvn
-            |> List.append [ StringSimilarityEvaluator() ]
-        SimilarityEvaluatorCollection.From(primitives)
+            |> List.append [ StringSimilarityEvaluator() ])
 
 and SimilarityEvaluatorDictionary private (dictionary) =
     inherit ReadOnlyDictionary<Type, SimilarityEvaluatorBase>(dictionary)
